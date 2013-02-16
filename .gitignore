@@ -1,0 +1,15 @@
+*.sdf
+*.suo
+*.user
+*.log
+*.tlog
+*.pdb
+*.obj
+*.exe
+*.lastbuildstate
+*.bin
+release/*
+debug/*
+*.htm
+*.xml
+*.filters
