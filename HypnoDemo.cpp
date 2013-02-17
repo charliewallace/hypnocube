@@ -10,6 +10,7 @@
 #include <cctype>
 #include <conio.h>
 #include <ctime>
+#include <WinBase.h>
 
 #include "HypnoDemo.h" // include helper classes
 #include "Gadget.h"    // include this to access the HypnoCube, HypnoSquare, etc.
@@ -395,8 +396,13 @@ void DrawFrame(GadgetControl & gadget, char theClockType)
 	int hour = now->tm_hour;
 	int minute = now->tm_min;
 	int second = now->tm_sec;
+	int tk = 0;
 	static int lastSecond = 0;
-	
+
+	SYSTEMTIME systime;
+	GetSystemTime(&systime);
+	int ms = systime.wMilliseconds;
+
 	uint8 image[96]; // RGB buffer, 4 bits per color, packed
 
 	//hour = now->tm_hour;
@@ -405,6 +411,7 @@ void DrawFrame(GadgetControl & gadget, char theClockType)
 
 	// clear screen by setting all values to 0
 	memset(image,0,sizeof(image));
+
 
 
 	// cube device we scroll on x,y,z
@@ -540,7 +547,7 @@ void DrawFrame(GadgetControl & gadget, char theClockType)
 	}
 	else if (theClockType == '3')
 	{
-		cout << "Clock type 3: FrontClock >>>\n";
+		//cout << "Clock type 3: FrontClock >>>\n";
 		//GetHandPosInRowPlane
 		int col1=0, z1 = 0;
 
@@ -672,7 +679,7 @@ void RunDemo(const string & port)
 			// So the time for a single update is just under 50ms.
 			while (!_kbhit())
 			{
-				//Sleep(200); // comment out for speed test
+				Sleep(20); // comment out for speed test
 
 				// Draw a frame of the demo
 				DrawFrame(gadget, theKey);
