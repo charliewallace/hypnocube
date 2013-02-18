@@ -411,13 +411,14 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 
 	if (theClockType == '0')
 	{
-		if (pos == 0)
-		{
-			cout << "Press any key to continue: >>>\n";
-			_getch();
-		}
+		//if (pos == 0)
+		//{
+		//	cout << "Press any key to continue: >>>\n";
+		//	_getch();
+		//}
 		int x,y,z, ii;  // coordinates
-		for (ii=0; ii<=pos; ii++)
+		//for (ii=0; ii<=pos; ii++)
+		for (ii=0; ii<=63; ii++)
 		{
 			x = ii/16; // convert ii 0-63 to x,y,z in [0,3]x[0,3]x[0,3]
 			y = (ii/4)&3;
@@ -711,20 +712,20 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		// indicator.
 
 		// prefill the center 4 leds for the back 3 planes.
-		SetPixelCube(1,0,1, 0,255,0, image);
-		SetPixelCube(1,0,2, 0,255,0, image);
-		SetPixelCube(2,0,1, 0,255,0, image);
-		SetPixelCube(2,0,2, 0,255,0, image);
+		//SetPixelCube(1,0,1, 0,255,0, image);
+		//SetPixelCube(1,0,2, 0,255,0, image);
+		//SetPixelCube(2,0,1, 0,255,0, image);
+		//SetPixelCube(2,0,2, 0,255,0, image);
 
-		SetPixelCube(1,1,1, 255,0,0, image);
-		SetPixelCube(1,1,2, 255,0,0, image);
-		SetPixelCube(2,1,1, 255,0,0, image);
-		SetPixelCube(2,1,2, 255,0,0, image);
+		//SetPixelCube(1,1,1, 255,0,0, image);
+		//SetPixelCube(1,1,2, 255,0,0, image);
+		//SetPixelCube(2,1,1, 255,0,0, image);
+		//SetPixelCube(2,1,2, 255,0,0, image);
 
-		SetPixelCube(1,2,1, 0,0,255, image);
-		SetPixelCube(1,2,2, 0,0,255, image);
-		SetPixelCube(2,2,1, 0,0,255, image);
-		SetPixelCube(2,2,2, 0,0,255, image);
+		//SetPixelCube(1,2,1, 0,0,255, image);
+		//SetPixelCube(1,2,2, 0,0,255, image);
+		//SetPixelCube(2,2,1, 0,0,255, image);
+		//SetPixelCube(2,2,2, 0,0,255, image);
 
 		// the front plane shows the current 5-second period within the minute
 		// This divides the front plane into 5 4-led squares: one in each corner and 
@@ -939,13 +940,13 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 			switch(sec0to4)
 			{
 			case 4:
-				SetPixelCube(col1,2,z1, 0,0,120,image);
+				SetPixelCube(col1,2,z1, 0,0,255,image);
 			case 3:
-				SetPixelCube(col2,2,z2, 0,0,120,image);
+				SetPixelCube(col2,2,z2, 0,0,255,image);
 			case 2:
-				SetPixelCube(col3,2,z3, 0,0,120,image);
+				SetPixelCube(col3,2,z3, 0,0,255,image);
 			case 1:
-				SetPixelCube(col4,2,z4, 0,0,120,image);
+				SetPixelCube(col4,2,z4, 0,0,255,image);
 			case 0:
 				break;
 			}
@@ -956,16 +957,16 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 			{
 			case 4:
 				//SetPixelCube(col1,2,z1, 0,0,60,image);
-				SetPixelCube(col1,2,z1, 60,60,255,image);
+				SetPixelCube(col1,2,z1, 20,20,120,image);
 			case 3:
 				//SetPixelCube(col2,2,z2, 0,0,60,image);
-				SetPixelCube(col2,2,z2, 60,60,255,image);
+				SetPixelCube(col2,2,z2, 20,20,120,image);
 			case 2:
 				//SetPixelCube(col3,2,z3, 0,0,60,image);
-				SetPixelCube(col3,2,z3, 60,60,255,image);
+				SetPixelCube(col3,2,z3, 20,20,120,image);
 			case 1:
 				//SetPixelCube(col4,2,z4, 0,0,60,image);
-				SetPixelCube(col4,2,z4, 60,60,255,image);
+				SetPixelCube(col4,2,z4, 20,20,120,image);
 			case 0:
 				break;
 			}
@@ -987,13 +988,13 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 			switch(min0to4)
 			{
 			case 4:
-				SetPixelCube(col1,1,z1, 120,0,0,image);
+				SetPixelCube(col1,1,z1, 255,0,0,image);
 			case 3:
-				SetPixelCube(col2,1,z2, 120,0,0,image);
+				SetPixelCube(col2,1,z2, 255,0,0,image);
 			case 2:
-				SetPixelCube(col3,1,z3, 120,0,0,image);
+				SetPixelCube(col3,1,z3, 255,0,0,image);
 			case 1:
-				SetPixelCube(col4,1,z4, 120,0,0,image); 
+				SetPixelCube(col4,1,z4, 255,0,0,image); 
 			case 0:
 				break;
 			}
@@ -1002,13 +1003,13 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 			switch(min0to4)
 			{
 			case 4:
-				SetPixelCube(col1,1,z1, 255,60,60,image);
+				SetPixelCube(col1,1,z1, 120,10,10,image);
 			case 3:
-				SetPixelCube(col2,1,z2, 255,60,60,image);
+				SetPixelCube(col2,1,z2, 120,10,10,image);
 			case 2:
-				SetPixelCube(col3,1,z3, 255,60,60,image);
+				SetPixelCube(col3,1,z3, 120,10,10,image);
 			case 1:
-				SetPixelCube(col4,1,z4, 255,60,60,image); 
+				SetPixelCube(col4,1,z4, 120,10,10,image); 
 			case 0:
 				break;
 			}
@@ -1029,13 +1030,13 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 			switch(while0to4)
 			{
 			case 4:
-				SetPixelCube(col1,0,z1, 0,120,0, image);
+				SetPixelCube(col1,0,z1, 0,255,0, image);
 			case 3:
-				SetPixelCube(col2,0,z2, 0,120,0, image);
+				SetPixelCube(col2,0,z2, 0,255,0, image);
 			case 2:
-				SetPixelCube(col3,0,z3, 0,120,0, image);
+				SetPixelCube(col3,0,z3, 0,255,0, image);
 			case 1:
-				SetPixelCube(col4,0,z4, 0,120,0, image); 
+				SetPixelCube(col4,0,z4, 0,255,0, image); 
 			case 0:
 				break;
 			}
@@ -1045,13 +1046,13 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 			switch(while0to4)
 			{
 			case 4:
-				SetPixelCube(col1,0,z1, 60,255,60, image);
+				SetPixelCube(col1,0,z1, 10,140,10, image);
 			case 3:
-				SetPixelCube(col2,0,z2, 60,255,60, image);
+				SetPixelCube(col2,0,z2, 10,140,10, image);
 			case 2:
-				SetPixelCube(col3,0,z3, 60,255,60, image);
+				SetPixelCube(col3,0,z3, 10,140,10, image);
 			case 1:
-				SetPixelCube(col4,0,z4, 60,255,60, image); 
+				SetPixelCube(col4,0,z4, 10,140,10, image); 
 			case 0:
 				break;
 			}		
@@ -1060,6 +1061,79 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		// each 1/12 second, advance to the next led running along outside edge of the front plane.
 		GetHandPos_Diagonal(updateCountThisSec, -1, -1, &row, &col, &mrow, &mcol);
 		SetPixelCube(col,3,row, 255,255,255, image); // yellow z-col
+	}
+	else if (theClockType == '6')
+	{
+		// the Plane clock.  Each plane is a quarter of the circle, 15 min or 15 sec.
+		// There a 16 per plane so one isn't used - it's the x=y=0 column, that's used
+		// as the subsecond indicator
+		int howManyQuarterSecs = updateCountThisSec/3;
+		SetPixelCube(0,0,howManyQuarterSecs, 255,255,255, image);
+
+		int x,y,z, ii;  // coordinates
+		int xMin,yMin,zMin, mm;  // coordinates
+
+		// Fill in the cube in planes of 15 sec each.
+		// Start ii at one so we actually will fill up the cube, othewise the last led
+		// never gets turned on. So at start of minute the first led is already on.
+
+		// first calculate the index of the current minute, mm:
+		mm = 0;
+		for (int theMin=0; theMin <=minute; theMin++)
+		{	
+			mm++;
+			zMin = mm/16; // convert ii 0-63 to x,y,z in [0,3]x[0,3]x[0,3]
+			yMin = (mm/4)&3;
+			xMin = mm&3;
+
+			if (xMin==0 && yMin==0)
+			{
+				// the calculated position fell in he x=y=0 column that's reserved
+				// for sub-second indicator.  Skip to next ii and recalc.
+				mm++;
+				zMin = mm/16; // convert ii 0-63 to x,y,z in [0,3]x[0,3]x[0,3]
+				yMin = (mm/4)&3;
+				xMin = mm&3;
+			}	
+			SetPixelCube(xMin,yMin,zMin, 0,0,255, image); 
+
+		}
+		//SetPixelCube(xMin,yMin,zMin, 0,0,255, image); 
+
+		// at this point, mm is the index of the minute led.
+
+		ii=0;
+		for (int theSec=0; theSec <=second; theSec++)
+		{		
+			ii++;
+			z = ii/16; // convert ii 0-63 to x,y,z in [0,3]x[0,3]x[0,3]
+			y = (ii/4)&3;
+			x = ii&3;
+
+			if (x==0 && y==0)
+			{
+				// the calculated position fell in he x=y=0 column that's reserved
+				// for sub-second indicator.  Skip to next ii and recalc.
+				ii++;
+				z = ii/16; // convert ii 0-63 to x,y,z in [0,3]x[0,3]x[0,3]
+				y = (ii/4)&3;
+				x = ii&3;
+			}
+
+			if (ii <= mm)
+			{
+				SetPixelCube(x,y,z, 255,0,255, image); 
+			}
+			else 
+			{
+				SetPixelCube(x,y,z, 255,0,0, image); 
+			}
+		}
+		//SetPixelCube(xMin,yMin,zMin, 0,0,255, image); 
+
+
+
+
 	}
 
 	lastSecond = second;
@@ -1125,18 +1199,20 @@ void RunDemo(const string & port)
 
 	// do not go faster than about 30 frames per second, 
 	// or the device may lock up, so....
-	unsigned long delay = 1000/30; // milliseconds per frame
+	unsigned long delay = 10;//1000/30; // milliseconds per frame
 	char theKey = '\0';
 
 	while (TRUE)
 	{
 		//cout << "Press any key to quit\n";
 		cout << "|>=- H Y P N O  C L O C K -=<|\n";
+		cout << "0:     Fill cube with all colors\n";
 		cout << "1:     EarlyClock\n";
 		cout << "2:     PaddleClock\n";
 		cout << "3:     HandsClock Colorful\n";
 		cout << "4:     HandsClock Monochrome\n";
 		cout << "5:     HandsClock Blinky\n";
+		cout << "6:     PlaneClock\n";
 		cout << "q:     Quit\n";
 		cout << "Enter: Quit\n";
 		cout << ">>";
@@ -1327,6 +1403,41 @@ void RunDemo(const string & port)
 
 		case '5':
 			cout << "Running HandsClock Blinky. Press any key to quit\n";
+
+			while (!_kbhit())
+			{
+				// wait for next tenth
+				while (clock() < finish)
+				{
+					// just wait
+					Sleep(1);
+				}
+
+				// wait is finished; now advance the tick target 'finish' to 1/12 sec from now.
+				finish = clock() + TICKS_PER_UPDATE;
+				updateCountThisSec ++;
+				if (updateCountThisSec >= UPDATES_PER_SEC)
+				{
+					updateCountThisSec = 0;
+				}
+
+				// Draw a frame of the demo
+				DrawFrame(gadget, theKey, updateCountThisSec);
+
+				// Loop, processing read and written bytes
+				// until time for next frame
+				unsigned long start = timeGetTime();
+				while (timeGetTime()-start < delay)
+				{
+					// be sure to call this often to process serial bytes
+					gadget.Update(); 
+					Sleep(1);
+				}
+			} 
+			break;
+
+		case '6':
+			cout << "Running Plane Clock. Press any key to quit\n";
 
 			while (!_kbhit())
 			{
