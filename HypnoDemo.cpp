@@ -204,10 +204,14 @@ void GetHandPos_Diagonal(int hour, int min, int sec, int* pRow, int* pCol, int* 
 // ---- looking from side opposite red power button, vert row planes go rt to left (not front to back),
 // ---- and col planes go back to front. 
 //
-// Defines the front-facing plane of leds as the one you see if the red power button is in back.
-// From that side, the vertical front plane is col plane 0, col planes running front-to-back.  
+// Defines the front-facing plane of leds as the one you see if the red power button is on the left.
+// From that side, the vertical plane in back is col plane 0, col planes run back-to-front.  
 // Vertical row planes run right to left, and horiz z-planes run bottom to top.
 // The generated output doesn't specify the row plane; only the position in that plane, specified by the col-plane and the z-plane.
+//
+// Sublety: the order in which the leds are provided is the order they will light up as the between-clock-numerals
+// increments proceed - like the 5 seconds between the 1 and the 2.  In the case of the 12 we have a square, and
+// the leds should begin on the inside (closer to center) and should proceed clockwise.
 void GetHandPosInRowPlane(int hour, int min, int sec, 
 						   int* pLed1ColPlane, int* pLed1Zplane, 
 						   int* pLed2ColPlane, int* pLed2Zplane,
@@ -241,13 +245,13 @@ void GetHandPosInRowPlane(int hour, int min, int sec,
 	{
 	case 0: // the 12 numeral of the clock.  Back left corner of cube as seen from button side.
 		z1 = 3;
-		col1 = 2;
+		col1 = 1;
 		z2 = 3;
-		col2 = 1;
+		col2 = 2;
 		z3 = 2;
-		col3 = 1;
+		col3 = 2;
 		z4 = 2;
-		col4 = 2;		
+		col4 = 1;		
 		break;
 	case 1:
 		z1 = 3;
@@ -270,13 +274,13 @@ void GetHandPosInRowPlane(int hour, int min, int sec,
 		col4 = 1;
 		break;
 	case 3:
-		z1 = 2;
+		z1 = 1;
 		col1 = 0;
-		z2 = 1;
+		z2 = 2;
 		col2 = 0;
-		z3 = 1;
+		z3 = 2;
 		col3 = 1;
-		z4 = 2;
+		z4 = 1;
 		col4 = 1;
 		break;
 	case 4:
@@ -301,13 +305,13 @@ void GetHandPosInRowPlane(int hour, int min, int sec,
 		break;
 	case 6:
 		z1 = 0;
-		col1 = 1;
+		col1 = 2;
 		z2 = 0;
-		col2 = 2;
+		col2 = 1;
 		z3 = 1;
-		col3 = 2;
+		col3 = 1;
 		z4 = 1;
-		col4 = 1;
+		col4 = 2;
 		break;
 	case 7:
 		z1 = 0;
@@ -330,13 +334,13 @@ void GetHandPosInRowPlane(int hour, int min, int sec,
 		col4 = 2;
 		break;
 	case 9:
-		z1 = 1;
+		z1 = 2;
 		col1 = 3;
-		z2 = 2;
+		z2 = 1;
 		col2 = 3;
-		z3 = 2;
+		z3 = 1;
 		col3 = 2;
-		z4 = 1;
+		z4 = 2;
 		col4 = 2;
 		break;
 	case 10:
@@ -673,13 +677,13 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		switch(while0to4)
 		{
 		case 4:
-			SetPixelCube(col1,0,z1, 0,0,255,image);
+			SetPixelCube(col1,0,z1, 255,100,0,image);  // medium orange
 		case 3:
-			SetPixelCube(col2,0,z2, 0,0,255,image);
+			SetPixelCube(col2,0,z2, 255,100,0,image);
 		case 2:
-			SetPixelCube(col3,0,z3, 0,0,255,image);
+			SetPixelCube(col3,0,z3, 255,100,0,image);
 		case 1:
-			SetPixelCube(col4,0,z4, 0,0,255,image); 
+			SetPixelCube(col4,0,z4, 255,100,0,image); 
 		case 0:
 			break;
 		}
@@ -689,6 +693,159 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		SetPixelCube(col,3,row, 255,255,255, image); // yellow z-col
 	}
 	else if (theClockType == '4')
+	{
+		//cout << "Clock type 3: FrontClock >>>\n";
+		//GetHandPosInRowPlane
+		int row=0, col=0;
+		int mrow=0, mcol=0;
+
+		int col1=0, z1 = 0;
+
+		int col2=0, z2 = 0;
+		int col3=0, z3 = 0;
+		int col4=0, z4 = 0;
+
+		// I've chosen the 'front' of the cube to be the right side if viewed from
+		// the red-button side of the cube.  With this 'front' facing toward you, the back plane
+		// shows the hours, next closer is the minutes, then the second hand, then the 5-second 
+		// indicator.
+
+		// prefill the center 4 leds for the back 3 planes.
+		SetPixelCube(1,0,1, 0,255,0, image);
+		SetPixelCube(1,0,2, 0,255,0, image);
+		SetPixelCube(2,0,1, 0,255,0, image);
+		SetPixelCube(2,0,2, 0,255,0, image);
+
+		SetPixelCube(1,1,1, 255,0,0, image);
+		SetPixelCube(1,1,2, 255,0,0, image);
+		SetPixelCube(2,1,1, 255,0,0, image);
+		SetPixelCube(2,1,2, 255,0,0, image);
+
+		SetPixelCube(1,2,1, 0,0,255, image);
+		SetPixelCube(1,2,2, 0,0,255, image);
+		SetPixelCube(2,2,1, 0,0,255, image);
+		SetPixelCube(2,2,2, 0,0,255, image);
+
+		// the front plane shows the current 5-second period within the minute
+		// This divides the front plane into 5 4-led squares: one in each corner and 
+		// the center.
+		int sec0to4 = second % 5;
+		switch (sec0to4)
+		{
+		case 0:
+			SetPixelCube(1,3,1, 255,255,0, image);
+			SetPixelCube(1,3,2, 255,255,0, image);
+			SetPixelCube(2,3,1, 255,255,0, image);
+			SetPixelCube(2,3,2, 255,255,0, image);
+			break;
+		case 1:
+			SetPixelCube(3,3,3, 255,255,0, image);
+			SetPixelCube(3,3,2, 255,255,0, image);
+			SetPixelCube(2,3,3, 255,255,0, image);
+			SetPixelCube(2,3,2, 255,255,0, image);
+			break;		
+		case 2:
+			SetPixelCube(0,3,3, 255,255,0, image);
+			SetPixelCube(1,3,3, 255,255,0, image);
+			SetPixelCube(0,3,2, 255,255,0, image);
+			SetPixelCube(1,3,2, 255,255,0, image);
+			break;		
+		case 3:
+			SetPixelCube(1,3,1, 255,255,0, image);
+			SetPixelCube(1,3,0, 255,255,0, image);
+			SetPixelCube(0,3,1, 255,255,0, image);
+			SetPixelCube(0,3,0, 255,255,0, image);
+			break;		
+		case 4:
+			SetPixelCube(3,3,1, 255,255,0, image);
+			SetPixelCube(3,3,0, 255,255,0, image);
+			SetPixelCube(2,3,1, 255,255,0, image);
+			SetPixelCube(2,3,0, 255,255,0, image);
+			break;		
+		default:
+			break;		
+		}
+
+		// display the second hand  ===================
+		GetHandPosInRowPlane(-1, -1, second, &col1, &z1, &col2, &z2, &col3, &z3, &col4, &z4);
+		//cout << "Clock type 3: hour =" << hour << ", min =" << minute << ", second =" << second << " \n";
+
+		// Draw the seconds hand in the 3rd-from-front plane.
+		SetPixelCube(col1,2,z1, 0,0,60, image);
+		SetPixelCube(col2,2,z2, 0,0,60, image);
+		SetPixelCube(col3,2,z3, 0,0,60, image);
+		SetPixelCube(col4,2,z4, 0,0,60, image);
+
+		switch(sec0to4)
+		{
+		case 4:
+			SetPixelCube(col1,2,z1, 0,0,255,image);
+		case 3:
+			SetPixelCube(col2,2,z2, 0,0,255,image);
+		case 2:
+			SetPixelCube(col3,2,z3, 0,0,255,image);
+		case 1:
+			SetPixelCube(col4,2,z4, 0,0,255,image);
+		case 0:
+			break;
+		}
+
+
+		// display the minute hand ===================
+		GetHandPosInRowPlane(-1, minute, -1, &col1, &z1, &col2, &z2, &col3, &z3, &col4, &z4);
+
+		SetPixelCube(col1,1,z1, 60,0,0, image);
+		SetPixelCube(col2,1,z2, 60,0,0, image);
+		SetPixelCube(col3,1,z3, 60,0,0, image);
+		SetPixelCube(col4,1,z4, 60,0,0, image);
+
+		int min0to4 = minute % 5;
+
+		// change color based on second within the curent set of 5 seconds
+		switch(min0to4)
+		{
+		case 4:
+			SetPixelCube(col1,1,z1, 255,0,0,image);
+		case 3:
+			SetPixelCube(col2,1,z2, 255,0,0,image);
+		case 2:
+			SetPixelCube(col3,1,z3, 255,0,0,image);
+		case 1:
+			SetPixelCube(col4,1,z4, 255,0,0,image); 
+		case 0:
+			break;
+		}
+
+		// display the hour hand ===================
+		GetHandPosInRowPlane(hour, -1, -1, &col1, &z1, &col2, &z2, &col3, &z3, &col4, &z4);
+
+		SetPixelCube(col1,0,z1, 0,60,0, image);
+		SetPixelCube(col2,0,z2, 0,60,0, image);
+		SetPixelCube(col3,0,z3, 0,60,0, image);
+		SetPixelCube(col4,0,z4, 0,60,0, image);
+
+		int while0to4 = minute / 12;  // which set of 12 mins within the hour
+
+		// change color based on second within the curent set of 5 seconds
+		switch(while0to4)
+		{
+		case 4:
+			SetPixelCube(col1,0,z1, 0,255,0, image);
+		case 3:
+			SetPixelCube(col2,0,z2, 0,255,0, image);
+		case 2:
+			SetPixelCube(col3,0,z3, 0,255,0, image);
+		case 1:
+			SetPixelCube(col4,0,z4, 0,255,0, image); 
+		case 0:
+			break;
+		}
+
+		// each 1/12 second, advance to the next led running along outside edge of the front plane.
+		GetHandPos_Diagonal(updateCountThisSec, -1, -1, &row, &col, &mrow, &mcol);
+		SetPixelCube(col,3,row, 255,255,255, image); // yellow z-col
+	}
+	else if (theClockType == '5')
 	{
 		//cout << "Clock type 3: FrontClock >>>\n";
 		//GetHandPosInRowPlane
@@ -729,34 +886,34 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		switch (sec0to4)
 		{
 		case 0:
-			SetPixelCube(1,3,1, 0,255,0, image);
-			SetPixelCube(1,3,2, 0,255,0, image);
-			SetPixelCube(2,3,1, 0,255,0, image);
-			SetPixelCube(2,3,2, 0,255,0, image);
+			SetPixelCube(1,3,1, 255,255,0, image);
+			SetPixelCube(1,3,2, 255,255,0, image);
+			SetPixelCube(2,3,1, 255,255,0, image);
+			SetPixelCube(2,3,2, 255,255,0, image);
 			break;
 		case 1:
-			SetPixelCube(3,3,3, 0,255,0, image);
-			SetPixelCube(3,3,2, 0,255,0, image);
-			SetPixelCube(2,3,3, 0,255,0, image);
-			SetPixelCube(2,3,2, 0,255,0, image);
+			SetPixelCube(3,3,3, 255,255,0, image);
+			SetPixelCube(3,3,2, 255,255,0, image);
+			SetPixelCube(2,3,3, 255,255,0, image);
+			SetPixelCube(2,3,2, 255,255,0, image);
 			break;		
 		case 2:
-			SetPixelCube(0,3,3, 0,255,0, image);
-			SetPixelCube(1,3,3, 0,255,0, image);
-			SetPixelCube(0,3,2, 0,255,0, image);
-			SetPixelCube(1,3,2, 0,255,0, image);
+			SetPixelCube(0,3,3, 255,255,0, image);
+			SetPixelCube(1,3,3, 255,255,0, image);
+			SetPixelCube(0,3,2, 255,255,0, image);
+			SetPixelCube(1,3,2, 255,255,0, image);
 			break;		
 		case 3:
-			SetPixelCube(1,3,1, 0,255,0, image);
-			SetPixelCube(1,3,0, 0,255,0, image);
-			SetPixelCube(0,3,1, 0,255,0, image);
-			SetPixelCube(0,3,0, 0,255,0, image);
+			SetPixelCube(1,3,1, 255,255,0, image);
+			SetPixelCube(1,3,0, 255,255,0, image);
+			SetPixelCube(0,3,1, 255,255,0, image);
+			SetPixelCube(0,3,0, 255,255,0, image);
 			break;		
 		case 4:
-			SetPixelCube(3,3,1, 0,255,0, image);
-			SetPixelCube(3,3,0, 0,255,0, image);
-			SetPixelCube(2,3,1, 0,255,0, image);
-			SetPixelCube(2,3,0, 0,255,0, image);
+			SetPixelCube(3,3,1, 255,255,0, image);
+			SetPixelCube(3,3,0, 255,255,0, image);
+			SetPixelCube(2,3,1, 255,255,0, image);
+			SetPixelCube(2,3,0, 255,255,0, image);
 			break;		
 		default:
 			break;		
@@ -767,74 +924,137 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		//cout << "Clock type 3: hour =" << hour << ", min =" << minute << ", second =" << second << " \n";
 
 		// Draw the seconds hand in the 3rd-from-front plane.
-		SetPixelCube(col1,2,z1, 20,20,80, image);
-		SetPixelCube(col2,2,z2, 20,20,80, image);
-		SetPixelCube(col3,2,z3, 20,20,80, image);
-		SetPixelCube(col4,2,z4, 20,20,80, image);
+		//SetPixelCube(col1,2,z1, 20,20,80, image);
+		//SetPixelCube(col2,2,z2, 20,20,80, image);
+		//SetPixelCube(col3,2,z3, 20,20,80, image);
+		//SetPixelCube(col4,2,z4, 20,20,80, image);
+		SetPixelCube(col1,2,z1, 0,0,255, image);
+		SetPixelCube(col2,2,z2, 0,0,255, image);
+		SetPixelCube(col3,2,z3, 0,0,255, image);
+		SetPixelCube(col4,2,z4, 0,0,255, image);
 
 		// change color based on second within the curent set of 5 seconds
-		switch(sec0to4)
+		if (updateCountThisSec%2 > 0)
 		{
-		case 4:
-			SetPixelCube(col1,2,z1, 0,0,255,image);
-		case 3:
-			SetPixelCube(col2,2,z2, 0,0,255,image);
-		case 2:
-			SetPixelCube(col3,2,z3, 0,0,255,image);
-		case 1:
-			SetPixelCube(col4,2,z4, 0,0,255,image);
-		case 0:
-			break;
+			switch(sec0to4)
+			{
+			case 4:
+				SetPixelCube(col1,2,z1, 0,0,120,image);
+			case 3:
+				SetPixelCube(col2,2,z2, 0,0,120,image);
+			case 2:
+				SetPixelCube(col3,2,z3, 0,0,120,image);
+			case 1:
+				SetPixelCube(col4,2,z4, 0,0,120,image);
+			case 0:
+				break;
+			}
+		}
+		else
+		{
+			switch(sec0to4)
+			{
+			case 4:
+				//SetPixelCube(col1,2,z1, 0,0,60,image);
+				SetPixelCube(col1,2,z1, 60,60,255,image);
+			case 3:
+				//SetPixelCube(col2,2,z2, 0,0,60,image);
+				SetPixelCube(col2,2,z2, 60,60,255,image);
+			case 2:
+				//SetPixelCube(col3,2,z3, 0,0,60,image);
+				SetPixelCube(col3,2,z3, 60,60,255,image);
+			case 1:
+				//SetPixelCube(col4,2,z4, 0,0,60,image);
+				SetPixelCube(col4,2,z4, 60,60,255,image);
+			case 0:
+				break;
+			}
 		}
 
 		// display the minute hand ===================
 		GetHandPosInRowPlane(-1, minute, -1, &col1, &z1, &col2, &z2, &col3, &z3, &col4, &z4);
 
-		SetPixelCube(col1,1,z1, 90,30,30, image);
-		SetPixelCube(col2,1,z2, 90,30,30, image);
-		SetPixelCube(col3,1,z3, 90,30,30, image);
-		SetPixelCube(col4,1,z4, 90,30,30, image);
+		SetPixelCube(col1,1,z1, 255,0,0, image);
+		SetPixelCube(col2,1,z2, 255,0,0, image);
+		SetPixelCube(col3,1,z3, 255,0,0, image);
+		SetPixelCube(col4,1,z4, 255,0,0, image);
 
 		int min0to4 = minute % 5;
 
 		// change color based on second within the curent set of 5 seconds
-		switch(min0to4)
+		if (updateCountThisSec%2 > 0)
 		{
-		case 4:
-			SetPixelCube(col1,1,z1, 255,0,0,image);
-		case 3:
-			SetPixelCube(col2,1,z2, 255,0,0,image);
-		case 2:
-			SetPixelCube(col3,1,z3, 255,0,0,image);
-		case 1:
-			SetPixelCube(col4,1,z4, 255,0,0,image); 
-		case 0:
-			break;
+			switch(min0to4)
+			{
+			case 4:
+				SetPixelCube(col1,1,z1, 120,0,0,image);
+			case 3:
+				SetPixelCube(col2,1,z2, 120,0,0,image);
+			case 2:
+				SetPixelCube(col3,1,z3, 120,0,0,image);
+			case 1:
+				SetPixelCube(col4,1,z4, 120,0,0,image); 
+			case 0:
+				break;
+			}
 		}
+		else
+			switch(min0to4)
+			{
+			case 4:
+				SetPixelCube(col1,1,z1, 255,60,60,image);
+			case 3:
+				SetPixelCube(col2,1,z2, 255,60,60,image);
+			case 2:
+				SetPixelCube(col3,1,z3, 255,60,60,image);
+			case 1:
+				SetPixelCube(col4,1,z4, 255,60,60,image); 
+			case 0:
+				break;
+			}
 
 		// display the hour hand ===================
 		GetHandPosInRowPlane(hour, -1, -1, &col1, &z1, &col2, &z2, &col3, &z3, &col4, &z4);
 
-		SetPixelCube(col1,0,z1, 30,90,30, image);
-		SetPixelCube(col2,0,z2, 30,90,30, image);
-		SetPixelCube(col3,0,z3, 30,90,30, image);
-		SetPixelCube(col4,0,z4, 30,90,30, image);
+		SetPixelCube(col1,0,z1, 0,255,0, image);
+		SetPixelCube(col2,0,z2, 0,255,0, image);
+		SetPixelCube(col3,0,z3, 0,255,0, image);
+		SetPixelCube(col4,0,z4, 0,255,0, image);
 
 		int while0to4 = minute / 12;  // which set of 12 mins within the hour
 
 		// change color based on second within the curent set of 5 seconds
-		switch(while0to4)
+		if (updateCountThisSec%2 > 0)
 		{
-		case 4:
-			SetPixelCube(col1,0,z1, 0,255,0, image);
-		case 3:
-			SetPixelCube(col2,0,z2, 0,255,0, image);
-		case 2:
-			SetPixelCube(col3,0,z3, 0,255,0, image);
-		case 1:
-			SetPixelCube(col4,0,z4, 0,255,0, image); 
-		case 0:
-			break;
+			switch(while0to4)
+			{
+			case 4:
+				SetPixelCube(col1,0,z1, 0,120,0, image);
+			case 3:
+				SetPixelCube(col2,0,z2, 0,120,0, image);
+			case 2:
+				SetPixelCube(col3,0,z3, 0,120,0, image);
+			case 1:
+				SetPixelCube(col4,0,z4, 0,120,0, image); 
+			case 0:
+				break;
+			}
+		}
+		else
+		{
+			switch(while0to4)
+			{
+			case 4:
+				SetPixelCube(col1,0,z1, 60,255,60, image);
+			case 3:
+				SetPixelCube(col2,0,z2, 60,255,60, image);
+			case 2:
+				SetPixelCube(col3,0,z3, 60,255,60, image);
+			case 1:
+				SetPixelCube(col4,0,z4, 60,255,60, image); 
+			case 0:
+				break;
+			}		
 		}
 
 		// each 1/12 second, advance to the next led running along outside edge of the front plane.
@@ -914,8 +1134,9 @@ void RunDemo(const string & port)
 		cout << "|>=- H Y P N O  C L O C K -=<|\n";
 		cout << "1:     EarlyClock\n";
 		cout << "2:     PaddleClock\n";
-		cout << "3:     HandsClock\n";
-		cout << "4:     HandsClockMonochrome\n";
+		cout << "3:     HandsClock Colorful\n";
+		cout << "4:     HandsClock Monochrome\n";
+		cout << "5:     HandsClock Blinky\n";
 		cout << "q:     Quit\n";
 		cout << "Enter: Quit\n";
 		cout << ">>";
@@ -1070,6 +1291,42 @@ void RunDemo(const string & port)
 
 		case '4':
 			cout << "Running HandsClock Monochrome. Press any key to quit\n";
+
+			while (!_kbhit())
+			{
+				// wait for next tenth
+				while (clock() < finish)
+				{
+					// just wait
+					Sleep(1);
+				}
+
+				// wait is finished; now advance the tick target 'finish' to 1/12 sec from now.
+				finish = clock() + TICKS_PER_UPDATE;
+				updateCountThisSec ++;
+				if (updateCountThisSec >= UPDATES_PER_SEC)
+				{
+					updateCountThisSec = 0;
+				}
+
+				// Draw a frame of the demo
+				DrawFrame(gadget, theKey, updateCountThisSec);
+
+				// Loop, processing read and written bytes
+				// until time for next frame
+				unsigned long start = timeGetTime();
+				while (timeGetTime()-start < delay)
+				{
+					// be sure to call this often to process serial bytes
+					gadget.Update(); 
+					Sleep(1);
+				}
+			} 
+			break;
+
+
+		case '5':
+			cout << "Running HandsClock Blinky. Press any key to quit\n";
 
 			while (!_kbhit())
 			{
