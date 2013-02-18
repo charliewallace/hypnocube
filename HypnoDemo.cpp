@@ -1067,8 +1067,6 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		// the Plane clock.  Each plane is a quarter of the circle, 15 min or 15 sec.
 		// There a 16 per plane so one isn't used - it's the x=y=0 column, that's used
 		// as the subsecond indicator
-		int howManyQuarterSecs = updateCountThisSec/3;
-		SetPixelCube(0,0,howManyQuarterSecs, 255,255,255, image);
 
 		int x,y,z, ii;  // coordinates
 		int xMin,yMin,zMin, mm;  // coordinates
@@ -1077,9 +1075,15 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		// Start ii at one so we actually will fill up the cube, othewise the last led
 		// never gets turned on. So at start of minute the first led is already on.
 
+		// treat second==zero as if it was 60 - we want all the leds on
+		int altMin = minute;
+		if (minute == 0)
+		{
+			altMin = 60;
+		}
 		// first calculate the index of the current minute, mm:
-		mm = 0;
-		for (int theMin=0; theMin <=minute; theMin++)
+		mm = -1;
+		for (int theMin=0; theMin <altMin; theMin++)
 		{	
 			mm++;
 			zMin = mm/16; // convert ii 0-63 to x,y,z in [0,3]x[0,3]x[0,3]
@@ -1102,8 +1106,15 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 
 		// at this point, mm is the index of the minute led.
 
-		ii=0;
-		for (int theSec=0; theSec <=second; theSec++)
+		// treat second==zero as if it was 60 - we want all the leds on
+		int altSec = second;
+		if (second == 0)
+		{
+			altSec = 60;
+		}
+
+		ii=-1;
+		for (int theSec=0; theSec <altSec; theSec++)
 		{		
 			ii++;
 			z = ii/16; // convert ii 0-63 to x,y,z in [0,3]x[0,3]x[0,3]
@@ -1120,6 +1131,7 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 				x = ii&3;
 			}
 
+
 			if (ii <= mm)
 			{
 				SetPixelCube(x,y,z, 255,0,255, image); 
@@ -1129,11 +1141,15 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 				SetPixelCube(x,y,z, 255,0,0, image); 
 			}
 		}
-		//SetPixelCube(xMin,yMin,zMin, 0,0,255, image); 
+		int row=0, col=0, mrow=0, mcol=0;
 
+		// display the hour as a single led along the edge of the top plane.
+		GetHandPos_Diagonal(hour, -1, -1, &row, &col, &mrow, &mcol);
+		SetPixelCube(col,row,3, 0,255,0, image); 
 
-
-
+		// display the sub-second indicator updating 4 times a second.
+		int howManyQuarterSecs = updateCountThisSec/3;
+		SetPixelCube(0,0,howManyQuarterSecs, 255,255,255, image);
 	}
 
 	lastSecond = second;
