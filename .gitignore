@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 464b6ea924871ede1a5f5820b79672b0d9b4eb3d
 *.sdf
 *.suo
 *.user
@@ -28,3 +32,4 @@ debug/*
 *.lai
 *.la
 *.a
+>>>>>>> 34d0570c205e7e7abdb7dae3950dcc2bb471f57b
