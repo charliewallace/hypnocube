@@ -1,3 +1,19 @@
+*.sdf
+*.suo
+*.user
+*.log
+*.tlog
+*.pdb
+*.obj
+*.exe
+*.lastbuildstate
+*.bin
+release/*
+debug/*
+*.htm
+*.xml
+*.filters
+=======
 # Compiled Object files
 *.slo
 *.lo
