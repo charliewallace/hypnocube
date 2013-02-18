@@ -1147,6 +1147,14 @@ void DrawFrame(GadgetControl & gadget, char theClockType, int updateCountThisSec
 		GetHandPos_Diagonal(hour, -1, -1, &row, &col, &mrow, &mcol);
 		SetPixelCube(col,row,3, 0,255,0, image); 
 
+		// twinkle the current second and minute to make them easier to find.
+		if (updateCountThisSec %2 > 0)
+		{
+			SetPixelCube(xMin,yMin,zMin, 0,0,60, image); 
+			SetPixelCube(x,y,z, 60,0,0, image); 
+		}
+
+
 		// display the sub-second indicator updating 4 times a second.
 		int howManyQuarterSecs = updateCountThisSec/3;
 		SetPixelCube(0,0,howManyQuarterSecs, 255,255,255, image);
